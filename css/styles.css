@@ -1,0 +1,27 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+
+*{
+    box-sizing: border-box;
+}
+
+.body{
+    background-color: rgb(4, 82, 113);
+}
+.light-blue{
+    color: rgb(4, 82, 113);
+}
+.dark-blue{
+    background-color: rgb(6, 144, 170);
+}
+.logo{
+    
+    font-family: 'Comfortaa', sans-serif;
+}
+.login__link{
+    color: rgb(6, 144, 170);
+}
+.card__account{
+    max-width: 450px;
+    width: 100%;
+}
