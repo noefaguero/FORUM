@@ -1,4 +1,40 @@
 <!DOCTYPE html>
+<?php
+    // check if it has received a POST request
+    if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST'){
+        
+        $inputUser = filter_input(INPUT_POST, "user", FILTER_SANITIZE_STRING); 
+        $inputKey = filter_input(INPUT_POST, "key", FILTER_SANITIZE_STRING);
+        
+        include "./includes/config_db.php";
+        include "./includes/user_functions.php";
+
+        // Send a query to the database
+        try {
+            $sql = "SELECT names, email, pw, rol FROM users";
+            $users = $bd->query($sql);
+            
+            // If the identification is correct, the session starts
+            if (check_user($users, $inputUser, $inputKey)) {
+                session_start();
+                $_SESSION["user"] = $inputUser;
+                header("Location: ./pages/editor/intro.php");
+            // If there is an error in the user
+            } else {
+                $error = TRUE;
+                $user = $inputUser;
+                
+            }
+    
+            // Close the connection
+            $bd = null;
+
+        } catch (Exception $e) {
+            echo "Error en la consulta a la base de datos: " . $e->getMessage();
+        }
+    }
+?>
+
 <html lang="es">
     <head>
         <meta charset="utf-8">
@@ -26,6 +62,16 @@
                 <!-- MAIN -->
                 <main>
                    <section class="my-3 row flex-column align-items-center">
+                       <?php
+                            if (isset($_GET["redirected"]) && $_GET["redirected"] == true) {
+                                echo '<div class="alert alert-light col-10 card__account" role="alert">Haga login para continuar</div>';
+                            }
+                        ?>
+                        <?php
+                            if (isset($error) && $error == true) {
+                                echo '<div class="alert alert-light col-10 card__account" role="alert">Revise usuario y contraseña</div>';
+                            }
+                        ?> 
                        <!-- login card -->
                         <article class="col-10 m-5 p-0 card card__account border-0">
                             <!-- card header -->
@@ -35,7 +81,7 @@
                             <!-- card footer -->
                             <div class="p-2">
                                 <!-- form -->
-                                <form action="" method="POST" class="row g-3 p-3">
+                                <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="POST" class="row g-3 p-3">
                                     <!-- email -->
                                     <div class="form-floating">
                                         <input type="text" name="user" class="form-control border-0 bg-light" id="floatingEmail" value="<?php if (isset($user)) echo $user; ?>" placeholder="usuario">
@@ -185,4 +231,3 @@
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
         </body>
 </html>
-
