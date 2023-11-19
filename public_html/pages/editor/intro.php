@@ -13,6 +13,6 @@
     <body>
         <h1> Bienvenido <?php echo htmlspecialchars($_SESSION["user"]);?> </h1>
         <br>
-        <a href="../../handlers/logout.php">Salir</a>
+        <a href="../../../private/handlers/logout.php">Salir</a>
     </body>
 </html>

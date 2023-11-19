@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <?php
     // check if it has received a POST request
-    if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST'){
+    if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         
+        //get the varaibles 
         $inputUser = filter_input(INPUT_POST, "user", FILTER_SANITIZE_STRING); 
         $inputKey = filter_input(INPUT_POST, "key", FILTER_SANITIZE_STRING);
         
-        include "./includes/config_db.php";
-        include "./includes/user_functions.php";
+        include "../private/includes/config_db.php";
+        include "../private/includes/user_functions.php";
 
         // Send a query to the database
         try {
@@ -16,8 +17,11 @@
             
             // If the identification is correct, the session starts
             if (check_user($users, $inputUser, $inputKey)) {
+                //Start the session 
                 session_start();
                 $_SESSION["user"] = $inputUser;
+                
+                //Relocate the user to the intro page
                 header("Location: ./pages/editor/intro.php");
             // If there is an error in the user
             } else {
@@ -39,8 +43,9 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-        <link rel="stylesheet" href="./css/styles.css">
+        <link rel="stylesheet" href="../public_html/css/styles.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
         <title>NEXT FORUM</title>
     </head>
@@ -60,14 +65,13 @@
             <!-- container -->
             <div class="container">
                 <!-- MAIN -->
-                <main>
-                   <section class="my-3 row flex-column align-items-center">
+                <main class="main">
+                   <div class="my-3 row flex-column align-items-center">
                        <?php
                             if (isset($_GET["redirected"]) && $_GET["redirected"] == true) {
                                 echo '<div class="alert alert-light col-10 card__account" role="alert">Haga login para continuar</div>';
                             }
-                        ?>
-                        <?php
+                        
                             if (isset($error) && $error == true) {
                                 echo '<div class="alert alert-light col-10 card__account" role="alert">Revise usuario y contraseña</div>';
                             }
@@ -76,7 +80,7 @@
                         <article class="col-10 m-5 p-0 card card__account border-0">
                             <!-- card header -->
                             <div class="card-header d-flex justify-content-center">
-                                <h1 class="m-0 text-secondary">MI CUENTA</h1>
+                                <h2 class="m-0 text-secondary">MI CUENTA</h2>
                             </div>
                             <!-- card footer -->
                             <div class="p-2">
@@ -84,7 +88,7 @@
                                 <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="POST" class="row g-3 p-3">
                                     <!-- email -->
                                     <div class="form-floating">
-                                        <input type="text" name="user" class="form-control border-0 bg-light" id="floatingEmail" value="<?php if (isset($user)) echo $user; ?>" placeholder="usuario">
+                                        <input type="text" name="user" class="form-control border-0 bg-light" id="email" value="<?php if (isset($user)){ echo $user;} ?>" placeholder="usuario">
                                         <label for="floatingEmail" class="ms-2 light-blue">Usuario o email</label>
                                     </div>
                                     <!-- password -->
@@ -94,7 +98,7 @@
                                     </div>
                                     <!-- buttons -->
                                     <div>
-                                        <input type="submit" class="btn btn-secondary border-0 dark-blue text-white btn-lg rounded-5 w-100 my-3" value="INICIAR SESIÓN"></input>
+                                        <input type="submit" class="btn btn-secondary border-0 dark-blue text-white btn-lg rounded-5 w-100 my-3" value="INICIAR SESIÓN">
                                         <button type="button" class="btn btn-secondary border-0 text-white btn-lg rounded-5 w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modal">CREAR CUENTA</button>
                                     </div>
                                     <!-- collapse for reset password -->
@@ -109,7 +113,7 @@
                                                     <label for="floatingEmail2" class="ms-2 light-blue">Introduce tu correo electrónico</label>
                                                 </div>
                                                 <!-- submit button -->
-                                                <input type="submit" class="btn btn-secondary border-0 text-white btn-lg rounded-5 w-100 my-3" value="ENVIAR"></input>
+                                                <input type="submit" class="btn btn-secondary border-0 text-white btn-lg rounded-5 w-100 my-3" value="ENVIAR">
                                                 <p class="light-blue text-white m-0 fw-bold">En breve, recibirás un email con un enlace para restablecer tu contraseña.</p>
                                             </div>
                                           </div>
@@ -117,13 +121,13 @@
                                 </form>
                             </div>
                         </article>
-                   </section>
+                   </div>
                 </main>
             </div>
             <!-- FOOTER -->
             <footer>
                 <!-- social-networks section -->
-                <section class="bg-secondary">
+                <div class="bg-secondary">
                     <div class="container d-flex flex-column mt-3 align-items-center">
                         <div class="d-flex justify-content-center gap-3 my-3">
                             <!-- youtube link -->
@@ -144,9 +148,9 @@
                             </a>
                         </div>
                     </div>
-                </section>
+                </div>
                 <!-- section with logo and link lis -->
-                <section class="bg-light">
+                <div class="bg-light">
                     <div class="container d-flex flex-column align-items-center">
                         <!-- links list-->
                         <ul class="nav fs-6 gap-4 justify-content-center py-3">
@@ -157,7 +161,7 @@
                             <li class="nav-item"><a class="nav-link light-blue" href="">CONTACTO</a></li>
                         </ul>
                     </div>
-                </section>
+                </div>
             </footer>
             <!-- sign up modal -->
             <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -170,44 +174,41 @@
                         </div>
                         <!-- modal body -->
                         <div class="modal-body">
-                            <form action="" method="post" class="row g-3 p-3">
+                            
+                            <!--Form to register an user-->
+                            <form action="../private/handlers/register.php" method="post" class="row g-3 p-3">
                                 <!-- name -->
                                 <div class="form-floating col-xl-4">
-                                    <input type="text" class="form-control border-0 bg-light" id="floatingInput1" placeholder="first name">
+                                    <input type="text" class="form-control border-0 bg-light" id="floatingInput1" placeholder="first name" name="name">
                                     <label for="floatingInput1" class="ms-2 light-blue">Nombre</label>
                                 </div>
                                 <!-- second name -->
                                 <div class="form-floating col-xl-8">
-                                    <input type="text" class="form-control border-0 bg-light" id="floatingInput2" placeholder="second name">
+                                    <input type="text" class="form-control border-0 bg-light" id="floatingInput2" placeholder="second name" name="secondName">
                                     <label for="floatingInput2" class="ms-2 light-blue">Apellidos</label>
                                 </div>
                                 <!-- gender -->
-                                <div class="form-floating col-md-6">
-                                    <select class="form-select form-control border-0 bg-light" id="floatingSelect" aria-label="Floating label select example">
-                                        <option value="" disabled selected></option>
+                                <div class="form-floating ">
+                                    <select class="form-select form-control border-0 bg-light" id="floatingSelect" aria-label="Floating label select example" name="gender">
+                                        <option value="" disabled selected>Escoge</option>
                                         <option value="M">Hombre</option>
                                         <option value="F">Mujer</option>
                                     </select>
                                     <label for="floatingSelect" class="ms-2 light-blue">Género</label>
                                 </div>
-                                <!-- birthday -->
-                                <div class="form-floating col-md-6">
-                                    <input type="date" class="form-control border-0 bg-light" id="floatingDate" placeholder="Date">
-                                    <label for="floatingDate" class="ms-2 light-blue">Fecha de nacimiento</label>
-                                </div>
                                 <!-- email -->
                                 <div class="form-floating">
-                                    <input type="email" class="form-control border-0 bg-light" id="floatingEmail" placeholder="name@example.com">
+                                    <input type="email" class="form-control border-0 bg-light" id="floatingEmail" placeholder="name@example.com" name="email">
                                     <label for="floatingEmail" class="ms-2 light-blue">Correo electrónico</label>
                                 </div>
                                 <!-- password -->
                                 <div class="form-floating">
-                                    <input type="password" class="form-control border-0 bg-light" id="floatingPassword1" placeholder="Password">
+                                    <input type="password" class="form-control border-0 bg-light" id="floatingPassword1" placeholder="Password" name="password">
                                     <label for="floatingPassword1" class="ms-2 light-blue">Introduce tu contraseña</label>
                                 </div>
                                 <!-- repeat password -->
                                 <div class="form-floating">
-                                    <input type="password" class="form-control border-0 bg-light" id="floatingPassword2" placeholder="Password2">
+                                    <input type="password" class="form-control border-0 bg-light" id="floatingPassword2" placeholder="Password2" name="repeatPassword">
                                     <label for="floatingPassword2" class="ms-2 light-blue">Repite tu contraseña</label>
                                 </div>
                                 <!-- checking -->
@@ -221,7 +222,7 @@
                                 </div>
                                 <!-- submit button -->
                                 <div>
-                                    <input type="submit" class="btn btn-secondary border-0 dark-blue text-white btn-lg rounded-5 w-100 my-3" value="ENVIAR"></input>
+                                    <input type="submit" class="btn btn-secondary border-0 dark-blue text-white btn-lg rounded-5 w-100 my-3" value="ENVIAR">
                                 </div>
                             </form>
                         </div>
