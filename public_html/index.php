@@ -1,37 +1,49 @@
 <!DOCTYPE html>
 <?php
+    $errorExecute=FALSE;
     // check if it has received a POST request
     if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         
         //get the varaibles 
         $inputUser = filter_input(INPUT_POST, "user", FILTER_SANITIZE_STRING); 
         $inputKey = filter_input(INPUT_POST, "key", FILTER_SANITIZE_STRING);
+        //Variable to check if the execute has given an error
         
         include "../private/includes/config_db.php";
         include "../private/includes/user_functions.php";
 
         // Send a query to the database
         try {
-            $sql = "SELECT names, email, pw, rol FROM users";
-            $users = $bd->query($sql);
             
-            // If the identification is correct, the session starts
-            if (check_user($users, $inputUser, $inputKey)) {
-                //Start the session 
-                session_start();
-                $_SESSION["user"] = $inputUser;
+            //Prepared statement to select all users from the BD
+            $sql=$bd->prepare("SELECT names, email, pw, rol FROM users");
+            
+            //Execute the query
+            if($sql->execute() ){
                 
-                //Relocate the user to the intro page
-                header("Location: ./pages/editor/intro.php");
-            // If there is an error in the user
-            } else {
-                $error = TRUE;
-                $user = $inputUser;
+                // If the identification is correct, the session starts
+                if (check_user($sql, $inputUser, $inputKey)) {
+                    //Start the session 
+                    session_start();
+                    $_SESSION["user"] = $inputUser;
+//                    $_SESSION["rol"]= $sql[3];
+
+                    //Relocate the user to the intro page
+                    header("Location: ./pages/editor/intro.php");
+                // If there is an error in the user
+                } else {
+                    $error = TRUE;
+                    $user = $inputUser;
+                }
+
+                // Close the connection
+                $bd = null;
                 
             }
-    
-            // Close the connection
-            $bd = null;
+            else{
+               $errorExecute = TRUE;
+            }
+            
 
         } catch (Exception $e) {
             echo "Error en la consulta a la base de datos: " . $e->getMessage();
@@ -68,10 +80,12 @@
                 <main class="main">
                    <div class="my-3 row flex-column align-items-center">
                        <?php
-                            if (isset($_GET["redirected"]) && $_GET["redirected"] == true) {
+                            if (htmlspecialchars(isset($_GET["redirected"]) ) && htmlspecialchars($_GET["redirected"] == true) ){
                                 echo '<div class="alert alert-light col-10 card__account" role="alert">Haga login para continuar</div>';
                             }
-                        
+                            if(isset($errorExecute)&&$errorExecute === TRUE){
+                                echo '<div class="alert alert-light col-10 card__account" role="alert">Ha ocurrido un error, vuelve a intentarlo.</div>';
+                            }
                             if (isset($error) && $error == true) {
                                 echo '<div class="alert alert-light col-10 card__account" role="alert">Revise usuario y contraseña</div>';
                             }
