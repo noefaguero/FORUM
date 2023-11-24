@@ -22,15 +22,26 @@
             if($sql->execute() ){
                 
                 // If the identification is correct, the session starts
-                if (check_user($sql, $inputUser, $inputKey)) {
+                if (check_user($sql, $inputUser, $inputKey) ){
                     //Start the session 
                     session_start();
-                    $_SESSION["user"] = $inputUser;
-//                    $_SESSION["rol"]= $sql[3];
-
+                    //Save the time where the player has started the session
+                    $_SESSION["lastAcces"]= date("d-m-Y H:i:s");
+                    
                     //Relocate the user to the intro page
-                    header("Location: ./pages/editor/intro.php");
-                // If there is an error in the user
+                    if($_SESSION["rol"]==="editor"){
+//                        header("Location: ./pages/editor/intro.php");
+                        header("Location:./pages/editor/intro.php");
+                    }
+                    elseif($_SESSION["rol"]==="subscriber"){
+                        header("Location: ./pages/subscriber/introSubscriber.php"); 
+                    }
+                    else{
+                        //If it doesnt have any valid rol it returns you to the index with an error
+                        $errorExecute=TRUE;
+                        header("Location: ../public_html/index.php");
+                    }  
+//                 If there is an error in the user
                 } else {
                     $error = TRUE;
                     $user = $inputUser;
@@ -89,6 +100,10 @@
                             if (isset($error) && $error == true) {
                                 echo '<div class="alert alert-light col-10 card__account" role="alert">Revise usuario y contraseña</div>';
                             }
+                            if (htmlspecialchars(isset($_GET["timePass"]) ) && htmlspecialchars($_GET["timePass"] == TRUE) ){
+                                echo '<div class="alert alert-light col-10 card__account" role="alert">Se ha cerrado la sesión por tiempo de inactividad.</div>';
+                            }
+                            
                         ?> 
                        <!-- login card -->
                         <article class="col-10 m-5 p-0 card card__account border-0">

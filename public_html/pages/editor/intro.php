@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <?php
+    
+    require '../../../private/includes/sessionFunctions.php';
+    
     session_start();
     if(!isset($_SESSION["user"])){
         header("Location: login.php?redirected=true");
     }
+    
+    
+    checkInactivityTimePassed($_SESSION["lastAcces"]);
 ?>
 <html lang="es">
     <head>
