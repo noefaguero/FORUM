@@ -2,7 +2,7 @@
 <?php
     session_start();
     if(!isset($_SESSION["user"])){
-        header("Location: login.php?redirected=true");
+        header("Location: ../../index.php?redirected=true");
     }
 ?>
 <html lang="es">
