@@ -1,55 +1,33 @@
 <?php
 
-include "../private/includes/config_db.php";
-
+include "../includes/user_functions.php";
 
 //Check if the data has been sent
 if( $_SERVER['REQUEST_METHOD']=='POST' ){
 
     $error = "";
-
-    //Check if the variables are set
-
-    if(isset($_POST['username'])){
-        $name = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
-    } else {
-        $error.= "username=true&";
-    }
-
-    if(isset($_POST['genre'])){
-        $genre = filter_input(INPUT_POST, 'genre', FILTER_SANITIZE_STRING);
-    } else {
-        $error.= "genre=true&;";
-    }
-
-    if(isset($_POST['email'])){
-        $email = strtolower(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING));
-    } else {
-        $error.= "email=true&;";
-    }
-
-    if(isset($_POST['pw1'])){
-        $genre = filter_input(INPUT_POST, 'pw1', FILTER_SANITIZE_STRING);
-    } else {
-        $error.= "pw1=true&;";
-    }
-
-    if(isset($_POST['pw2'])){
-        $genre = filter_input(INPUT_POST, 'pw2', FILTER_SANITIZE_STRING);
-    } else {
-        $error.= "pw2=true&";
-    }
-
-    if($error === ""){
-        if ($pw1 === $pw2){
+    $fields = ["rol", "username", "email", "pw"];
+    
+    $error .= empty_field(...$fields);
+    
+    
+     if($error === ""){
+        if (filter_field("pw1") === filter_field("pw2")){
             header('Location: ../../public_html/index.php');
-            insertNewUser($username, $genre, $email, $pw);
+            insert_user(
+                filter_field("rol"), 
+                filter_field("username"), 
+                filter_field("genre"), 
+                filter_field("email"), 
+                filter_field("pw")
+            );
         } else {
-            $error="repeat";
+            header('Location: ../../public_html/index.php?pw=false');
         }
     } else {
         $error = substr($error, 0, -1);
         header("Location: ../../index.php?$error");
-        insertNewUser($username, $genre, $email, $pw1);
+   
     }
+    
 }

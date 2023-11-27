@@ -1,5 +1,7 @@
 <?php
 
+include "./config_db.php";
+
 /**
  * 
  * @param array $users //Line of the database with the information
@@ -18,4 +20,22 @@ function check_user($users, $inputName, $inputKey) {
     }
     //If any of them is correct returns false
     return false;
+}
+
+//Check if some variable is empty
+function empty_field($field){
+    if(!isset($_POST[$field])){
+        return "$field=false&";
+    }
+}
+
+function filter_field($field){
+    return filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
+}
+    
+function insert_user($rol, $username, $genre, $email, $pw){
+    
+    //Prepared statement insert new user
+    $sql = $bd->prepare("INSERT INTO users(rol, names, genre, email, pw) VALUES (?, ?, ?, ?, ?)");
+    $sql->execute($rol, $username, $genre, $email, $pw);
 }
