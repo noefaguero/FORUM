@@ -127,12 +127,12 @@
                                     <!-- buttons -->
                                     <div>
                                         <input type="submit" class="btn btn-secondary border-0 dark-blue text-white btn-lg rounded-5 w-100 my-3" value="INICIAR SESIÓN">
-                                        <button type="button" class="btn btn-secondary border-0 text-white btn-lg rounded-5 w-100 mb-3" data-bs-toggle="modal" data-bs-target="#modal">CREAR CUENTA</button>
+                                        <a href="./pages/register.php" class="btn btn-secondary border-0 text-white btn-lg rounded-5 w-100 mb-3">CREAR CUENTA</a>
                                     </div>
                                     <!-- collapse for reset password -->
                                     <div class="mt-0 text-center">
                                         <a class="mx-auto mt-0 mb-2 login__link" data-bs-toggle="collapse" href="#collapseExample">¿Has olvidado tu contraseña?</a>
-                                          <div class="collapse mt-3" id="collapseExample">
+                                        <div class="collapse mt-3" id="collapseExample">
                                             <!-- card -->
                                             <div class="card dark-blue card-body">
                                                 <!-- email -->
@@ -144,7 +144,7 @@
                                                 <input type="submit" class="btn btn-secondary border-0 text-white btn-lg rounded-5 w-100 my-3" value="ENVIAR">
                                                 <p class="light-blue text-white m-0 fw-bold">En breve, recibirás un email con un enlace para restablecer tu contraseña.</p>
                                             </div>
-                                          </div>
+                                        </div>
                                     </div>
                                 </form>
                             </div>
@@ -191,72 +191,6 @@
                     </div>
                 </div>
             </footer>
-            <!-- sign up modal -->
-            <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <!-- modal header -->
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-2 options__title m-0" id="exampleModalLabel">REGISTRATE</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <!-- modal body -->
-                        <div class="modal-body">
-                            
-                            <!--Form to register an user-->
-                            <form action="../private/handlers/register.php" method="post" class="row g-3 p-3">
-                                <!-- name -->
-                                <div class="form-floating col-xl-4">
-                                    <input type="text" class="form-control border-0 bg-light" id="floatingInput1" placeholder="first name" name="name">
-                                    <label for="floatingInput1" class="ms-2 light-blue">Nombre</label>
-                                </div>
-                                <!-- second name -->
-                                <div class="form-floating col-xl-8">
-                                    <input type="text" class="form-control border-0 bg-light" id="floatingInput2" placeholder="second name" name="secondName">
-                                    <label for="floatingInput2" class="ms-2 light-blue">Apellidos</label>
-                                </div>
-                                <!-- gender -->
-                                <div class="form-floating ">
-                                    <select class="form-select form-control border-0 bg-light" id="floatingSelect" aria-label="Floating label select example" name="gender">
-                                        <option value="" disabled selected>Escoge</option>
-                                        <option value="M">Hombre</option>
-                                        <option value="F">Mujer</option>
-                                    </select>
-                                    <label for="floatingSelect" class="ms-2 light-blue">Género</label>
-                                </div>
-                                <!-- email -->
-                                <div class="form-floating">
-                                    <input type="email" class="form-control border-0 bg-light" id="floatingEmail" placeholder="name@example.com" name="email">
-                                    <label for="floatingEmail" class="ms-2 light-blue">Correo electrónico</label>
-                                </div>
-                                <!-- password -->
-                                <div class="form-floating">
-                                    <input type="password" class="form-control border-0 bg-light" id="floatingPassword1" placeholder="Password" name="password">
-                                    <label for="floatingPassword1" class="ms-2 light-blue">Introduce tu contraseña</label>
-                                </div>
-                                <!-- repeat password -->
-                                <div class="form-floating">
-                                    <input type="password" class="form-control border-0 bg-light" id="floatingPassword2" placeholder="Password2" name="repeatPassword">
-                                    <label for="floatingPassword2" class="ms-2 light-blue">Repite tu contraseña</label>
-                                </div>
-                                <!-- checking -->
-                                <div>
-                                    <div class="form-check">
-                                        <input class="form-check-input ps-2" type="checkbox" value="" id="invalidCheck2" required>
-                                        <label class="form-check-label" for="invalidCheck2">
-                                            Acepto la política de privacidad
-                                        </label>
-                                    </div>
-                                </div>
-                                <!-- submit button -->
-                                <div>
-                                    <input type="submit" class="btn btn-secondary border-0 dark-blue text-white btn-lg rounded-5 w-100 my-3" value="ENVIAR">
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
         </body>
 </html>

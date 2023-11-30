@@ -80,7 +80,7 @@ CREATE TABLE `users` (
   `names` varchar(30) NOT NULL,
   `email` varchar(30) NOT NULL,
   `pw` varchar(128) NOT NULL,
-  `genre` char(2) NOT NULL,
+  `gender` char(1) NOT NULL,
   `rol` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -88,11 +88,11 @@ CREATE TABLE `users` (
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id_user`, `names`, `email`, `pw`, `genre`, `rol`) VALUES
+INSERT INTO `users` (`id_user`, `names`, `email`, `pw`, `gender`, `rol`) VALUES
 (1, 'carlos99', 'carlos99@example.com', '$2y$10$aVJJtykFTBudvLa40xISPe2h5fKTA4sMw8ZkUC0gdNIipzwZ26uCy', 'M', 'editor'),
 (2, 'jose84', 'jose84@example.com', '$2y$10$aVJJtykFTBudvLa40xISPe2h5fKTA4sMw8ZkUC0gdNIipzwZ26uCy', 'M', 'editor'),
 (3, 'adrina96', 'adriana96@example.com', '$2y$10$aVJJtykFTBudvLa40xISPe2h5fKTA4sMw8ZkUC0gdNIipzwZ26uCy', 'F', 'editor'),
-(4, 'maria82', 'Maria82@example.com', '$2y$10$NQNlGcM9EjhYB3WPWpUZoucoLZaQMrK8vZjj52bAEPG3QSI93VT8y', 'F', 'subscriber'),
+(4, 'maria82', 'maria82@example.com', '$2y$10$NQNlGcM9EjhYB3WPWpUZoucoLZaQMrK8vZjj52bAEPG3QSI93VT8y', 'F', 'subscriber'),
 (5, 'felipe78', 'felipe78@example.com', '$2y$10$NQNlGcM9EjhYB3WPWpUZoucoLZaQMrK8vZjj52bAEPG3QSI93VT8y', 'M', 'subscriber'),
 (6, 'carmen90', 'carmen90@example.com', '$2y$10$NQNlGcM9EjhYB3WPWpUZoucoLZaQMrK8vZjj52bAEPG3QSI93VT8y', 'F', 'subscriber');
 

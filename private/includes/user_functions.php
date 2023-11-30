@@ -1,6 +1,6 @@
 <?php
 
-include './config_db.php';
+include $_SERVER['DOCUMENT_ROOT'].'/Forum/private/includes/config_db.php';
 
 /**
  * 
@@ -32,19 +32,36 @@ function check_user($users, $inputName, $inputKey){
 }
 
 //Check if some variable is empty
-function empty_field($field){
-    if(!isset($_POST[$field])){
-        return "$field=false&";
+function empty_field(){
+    $errors = [];
+    foreach ($_POST as $field => $value) {
+        if($value == ""){
+            array_push($errors, $field);
+        }
+    }
+    return $errors;
+}
+
+function show_error($field, $errors){
+    if(in_array($field, $errors)){
+        return "form-control border-0 bg-danger-subtle";
+    } else {
+        return "form-control border-0 bg-light";
     }
 }
 
-function filter_field($field){
-    return filter_input(INPUT_POST, $field, FILTER_SANITIZE_STRING);
-}
+function insert_user($username, $rol, $gender, $email, $pw){
     
-function insert_user($rol, $username, $genre, $email, $pw){
+    global $bd;
     
-    //Prepared statement insert new user
-    $sql = $bd->prepare("INSERT INTO users(rol, names, genre, email, pw) VALUES (?, ?, ?, ?, ?)");
-    $sql->execute($rol, $username, $genre, $email, $pw);
+    try{
+        //Prepared statement insert new user
+        $sql = $bd->prepare("INSERT INTO users(names, rol, gender, email, pw) VALUES (?, ?, ?, ?, ?)");
+        $sql->execute([$username, $rol, $gender, $email, password_hash($pw, PASSWORD_DEFAULT)]);
+    } catch (Exception $e) {
+        echo "Error en inserción en a la base de datos: " . $e->getMessage();
+    }
+    // Close the connection
+    $bd = null;
+    
 }
