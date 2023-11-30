@@ -1,6 +1,6 @@
 <?php
 
-include "./config_db.php";
+include './config_db.php';
 
 /**
  * 
@@ -23,6 +23,7 @@ function check_user($users, $inputName, $inputKey){
             $_SESSION["user"] = $user[0];
             $_SESSION["email"] = $user[1];
             $_SESSION["rol"] = $user[3];
+            $_SESSION["id"]=$user[4];
             return true;
         }
     }

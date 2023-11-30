@@ -18,7 +18,7 @@ function checkInactivityTimePassed($lastConnection){
     }
     else{
         //If time has no passed then it actualises the time
-        return $dateNow;
+        $_SESSION["lastAcces"]=$dateNow;
     }
 }
 

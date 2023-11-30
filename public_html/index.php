@@ -16,7 +16,7 @@
         try {
             
             //Prepared statement to select all users from the BD
-            $sql=$bd->prepare("SELECT names, email, pw, rol FROM users");
+            $sql=$bd->prepare("SELECT names, email, pw, rol, id_user FROM users");
             
             //Execute the query
             if($sql->execute() ){
@@ -31,7 +31,7 @@
                     //Relocate the user to the intro page
                     if($_SESSION["rol"]==="editor"){
 //                        header("Location: ./pages/editor/intro.php");
-                        header("Location:./pages/editor/intro.php");
+                        header("Location:./pages/editor/introEditor.php");
                     }
                     elseif($_SESSION["rol"]==="subscriber"){
                         header("Location: ./pages/subscriber/introSubscriber.php"); 
@@ -39,7 +39,6 @@
                     else{
                         //If it doesnt have any valid rol it returns you to the index with an error
                         $errorExecute=TRUE;
-                        header("Location: ../public_html/index.php");
                     }  
 //                 If there is an error in the user
                 } else {
