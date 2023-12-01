@@ -9,7 +9,7 @@
     background-color: rgb(4, 82, 113);
 }
 .main{
-    height: 73vh;
+    min-height: calc(100vh - 320px);
 }
 .light-blue{
     color: rgb(4, 82, 113);
@@ -18,8 +18,9 @@
     background-color: rgb(6, 144, 170);
 }
 .logo{
-    
     font-family: 'Comfortaa', sans-serif;
+    border-radius: 51% 49% 77% 23% / 43% 46% 54% 57%;
+    background: linear-gradient(to top, grey 0%, black 50%)
 }
 .login__link{
     color: rgb(6, 144, 170);

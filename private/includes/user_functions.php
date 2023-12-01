@@ -1,8 +1,7 @@
 <?php
 
-include $_SERVER['DOCUMENT_ROOT'].'/Forum/private/includes/config_db.php';
-
 /**
+ * Check the user keys
  * 
  * @param array $users //Line of the database with the information
  * @param String $inputName //Name introduced to search
@@ -16,12 +15,11 @@ function check_user($users, $inputName, $inputKey){
         //If the statement is True it returns true
         if ( ($user["names"] == strtolower($inputName) || $user["email"] == strtolower($inputName)) && password_verify($inputKey, $user['pw']) ) {
             
-//            Start the session and its values
+            // Start the session and its values
             session_start();
             
-//            Save values of the user
+            // Save values of the user
             $_SESSION["user"] = $user[0];
-            $_SESSION["email"] = $user[1];
             $_SESSION["rol"] = $user[3];
             return true;
         }
@@ -47,20 +45,4 @@ function show_error($field, $errors){
     } else {
         return "form-control border-0 bg-light";
     }
-}
-
-function insert_user($username, $rol, $gender, $email, $pw){
-    
-    global $bd;
-    
-    try{
-        //Prepared statement insert new user
-        $sql = $bd->prepare("INSERT INTO users(names, rol, gender, email, pw) VALUES (?, ?, ?, ?, ?)");
-        $sql->execute([$username, $rol, $gender, $email, password_hash($pw, PASSWORD_DEFAULT)]);
-    } catch (Exception $e) {
-        echo "Error en inserción en a la base de datos: " . $e->getMessage();
-    }
-    // Close the connection
-    $bd = null;
-    
 }

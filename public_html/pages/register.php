@@ -2,28 +2,39 @@
 <?php
 
 include $_SERVER['DOCUMENT_ROOT'].'/Forum/private/includes/user_functions.php';
+include $_SERVER['DOCUMENT_ROOT'].'/Forum/private/includes/db_functions.php';
 
 $errors = [];
 
 //Check if the data has been sent
 if( $_SERVER['REQUEST_METHOD']=='POST' ){
     
-    //get the variables 
+    //get the form inputs 
     $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_STRING);
     $rol = filter_input(INPUT_POST, "rol", FILTER_SANITIZE_STRING);
     $gender = filter_input(INPUT_POST, "gender", FILTER_SANITIZE_STRING);
     $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_STRING);
-    $pw1_row = filter_input(INPUT_POST, "pw1", FILTER_SANITIZE_STRING);
-    $pw1 = password_hash($pw1_row, PASSWORD_DEFAULT);
-    $pw2_row = filter_input(INPUT_POST, "pw2", FILTER_SANITIZE_STRING);
+    $pw1_raw = filter_input(INPUT_POST, "pw1", FILTER_SANITIZE_STRING);
+    $pw1 = password_hash($pw1_raw, PASSWORD_DEFAULT);
+    $pw2_raw = filter_input(INPUT_POST, "pw2", FILTER_SANITIZE_STRING);
     
     // detect empty fields
     $errors = empty_field();
   
     if(count($errors) == 0){
-        if ($pw1_row == $pw2_row){
-            insert_user($username, $rol, $gender, $email, $pw1);
-            header('Location: ../index.php');
+        if ($pw1_raw == $pw2_raw){
+            // query to the db
+            try {
+                db_connect();
+                insert_user($username, $rol, $gender, $email, $pw1);
+                // redirection
+                header('Location: ../index.php');
+            } catch (Exception $e) {
+                //echo $e->getMessage();
+                header('Location: ../pages/maintenance.php');
+            } finally {
+                db_disconnect();
+            }
             
         } else {
             array_push($errors, "pw1", "pw2");

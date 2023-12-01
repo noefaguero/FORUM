@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <?php
-    $errorExecute=FALSE;
+    
+    
     // check if it has received a POST request
     if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         
@@ -9,55 +10,40 @@
         $inputKey = filter_input(INPUT_POST, "key", FILTER_SANITIZE_STRING);
         //Variable to check if the execute has given an error
         
-        include "../private/includes/config_db.php";
-        include "../private/includes/user_functions.php";
+        include $_SERVER['DOCUMENT_ROOT'].'/Forum/private/includes/db_functions.php';
+        include $_SERVER['DOCUMENT_ROOT'].'/Forum/private/includes/session_functions.php';
 
-        // Send a query to the database
+        // Send the querys to the database
         try {
+            db_connect();
             
-            //Prepared statement to select all users from the BD
-            $sql=$bd->prepare("SELECT names, email, pw, rol FROM users");
-            
-            //Execute the query
-            if($sql->execute() ){
+            if(user_exist($inputUser, $inputKey)){
+                session_start();
+                // Save the time when the player has started the session
+                $_SESSION["last_activity"] = time();
                 
-                // If the identification is correct, the session starts
-                if (check_user($sql, $inputUser, $inputKey) ){
-                    //Start the session 
-                    session_start();
-                    //Save the time where the player has started the session
-                    $_SESSION["lastAcces"]= date("d-m-Y H:i:s");
-                    
-                    //Relocate the user to the intro page
-                    if($_SESSION["rol"]==="editor"){
-//                        header("Location: ./pages/editor/intro.php");
-                        header("Location:./pages/editor/intro.php");
-                    }
-                    elseif($_SESSION["rol"]==="subscriber"){
-                        header("Location: ./pages/subscriber/introSubscriber.php"); 
-                    }
-                    else{
-                        //If it doesnt have any valid rol it returns you to the index with an error
-                        $errorExecute=TRUE;
-                        header("Location: ../public_html/index.php");
-                    }  
-//                 If there is an error in the user
-                } else {
-                    $error = TRUE;
-                    $user = $inputUser;
+                if(!isset($_COOKIE["session_option"])){
+                    set_session_option();
                 }
-
-                // Close the connection
-                $bd = null;
                 
+                // Redirection
+                if($_SESSION["rol"] === "editor"){
+                    header("Location:./pages/editor/intro.php");
+                }
+                else if($_SESSION["rol"] === "subscriber"){
+                    header("Location: ./pages/subscriber/index.php"); 
+                } else {
+                    header('Location: ./pages/maintenance.php');
+                }
+            } else {
+                $error = true;
             }
-            else{
-               $errorExecute = TRUE;
-            }
-            
-
+                
         } catch (Exception $e) {
-            echo "Error en la consulta a la base de datos: " . $e->getMessage();
+            //echo $e->getMessage();
+            header('Location: ./pages/maintenance.php');
+        } finally {
+            db_disconnect();
         }
     }
 ?>
@@ -92,10 +78,7 @@
                    <div class="my-3 row flex-column align-items-center">
                        <?php
                             if (htmlspecialchars(isset($_GET["redirected"]) ) && htmlspecialchars($_GET["redirected"] == true) ){
-                                echo '<div class="alert alert-light col-10 card__account" role="alert">Haga login para continuar</div>';
-                            }
-                            if(isset($errorExecute)&&$errorExecute === TRUE){
-                                echo '<div class="alert alert-light col-10 card__account" role="alert">Ha ocurrido un error, vuelve a intentarlo.</div>';
+                                echo '<div class="alert alert-light col-10 card__account" role="alert">Haga login para continuar' . $_SESSION["id"] . '</div>';
                             }
                             if (isset($error) && $error == true) {
                                 echo '<div class="alert alert-light col-10 card__account" role="alert">Revise usuario y contraseña</div>';
@@ -117,7 +100,7 @@
                                 <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="POST" class="row g-3 p-3">
                                     <!-- email -->
                                     <div class="form-floating">
-                                        <input type="text" name="user" class="form-control border-0 bg-light" id="email" value="<?php if (isset($user)){ echo $user;} ?>" placeholder="usuario">
+                                        <input type="text" name="user" class="form-control border-0 bg-light" id="email" value="<?php if (isset($inputUser)) echo $inputUser; ?>" placeholder="usuario">
                                         <label for="floatingEmail" class="ms-2 light-blue">Usuario o email</label>
                                     </div>
                                     <!-- password -->
