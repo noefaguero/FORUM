@@ -28,7 +28,7 @@
                 
                 // Redirection
                 if($_SESSION["rol"] === "editor"){
-                    header("Location:./pages/editor/intro.php");
+                    header("Location:./pages/editor/introEditor.php");
                 }
                 else if($_SESSION["rol"] === "subscriber"){
                     header("Location: ./pages/subscriber/index.php"); 

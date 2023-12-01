@@ -34,6 +34,34 @@ function db_disconnect() {
     $db = null;
 }
 
+/******************************** FOR LOG IN **********************************/
+
+function user_exist($inputUser, $inputKey) {
+    global $db;
+    try{
+        //Prepared statement to select a user
+        $sql=$db->prepare("SELECT id_user, names, rol, pw FROM users WHERE email = ? OR names = ?;");
+        //Execute the query
+        $sql->execute([strtolower($inputUser), strtolower($inputUser)]);
+        
+        $user = $sql->fetch();
+     
+        if($user && password_verify($inputKey, $user[3])){
+                session_start();
+                $_SESSION["id"] =  $user[0];
+                $_SESSION["name"] =  $user[1];
+                $_SESSION["rol"] = $user[2];
+                $match = true;
+        } else {
+            $match = false;
+        }
+    } catch (Exception $e) {
+        echo "Error en la consulta a la base de datos: " . $e->getMessage();
+        $match = false;
+    }
+    return $match;
+}           
+
 /******************************* FOR SING UP **********************************/
 
 /**
@@ -77,32 +105,4 @@ function records_count($table){
         echo "Error en la consulta a la base de datos: " . $e->getMessage();
     }
 }
-
-/******************************** FOR LOG IN **********************************/
-
-function user_exist($inputUser, $inputKey) {
-    global $db;
-    try{
-        //Prepared statement to select a user
-        $sql=$db->prepare("SELECT id_user, names, rol, pw FROM users WHERE email = ? OR names = ?;");
-        //Execute the query
-        $sql->execute([strtolower($inputUser), strtolower($inputUser)]);
-        
-        $user = $sql->fetch();
-     
-        if($user && password_verify($inputKey, $user[3])){
-                session_start();
-                $_SESSION["id"] =  $user[0];
-                $_SESSION["name"] =  $user[1];
-                $_SESSION["rol"] = $user[2];
-                $match = true;
-        } else {
-            $match = false;
-        }
-    } catch (Exception $e) {
-        echo "Error en la consulta a la base de datos: " . $e->getMessage();
-        $match = false;
-    }
-    return $match;
-}           
 

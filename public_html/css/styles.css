@@ -29,3 +29,37 @@
     max-width: 450px;
     width: 100%;
 }
+.bg-dark-red{
+    background-color: #3E0000;
+}
+
+.list{
+    display: grid;
+    grid-auto-columns: 1fr 1fr 2fr 3fr;
+    color: black;
+}
+.list__link{
+    border: 1px solid grey;
+    text-decoration: none;
+    color: black;
+}
+.list__ol{
+    display: flex;
+    flex-direction: column;
+
+    width: 90%;
+    padding: 20px;
+    margin: 10px;
+}
+.list__thread{
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr 3fr 1fr 1fr;
+    grid-auto-rows: 1fr;
+    border-bottom: 1px solid grey;
+    padding: 20px;
+}
+
+.stronger{
+    font-weight: 900;
+}
+

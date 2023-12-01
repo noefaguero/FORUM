@@ -21,6 +21,7 @@ function check_user($users, $inputName, $inputKey){
             // Save values of the user
             $_SESSION["user"] = $user[0];
             $_SESSION["rol"] = $user[3];
+            $_SESSION["id"]=$user[4];
             return true;
         }
     }
