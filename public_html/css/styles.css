@@ -8,6 +8,12 @@
 .body{
     background-color: rgb(4, 82, 113);
 }
+
+.color-link{
+    color: rgb(4, 82, 113);
+    text-decoration: none;
+    font-weight: bold;
+}
 .main{
     min-height: calc(100vh - 320px);
 }

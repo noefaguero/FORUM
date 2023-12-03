@@ -12,6 +12,10 @@
         check_inactivity($_SESSION["last_activity"]);
     }
     
+    if($_SERVER['REQUEST_METHOD']=='GET'){ 
+        $thr = filter_input(INPUT_GET, "thread", FILTER_VALIDATE_INT);
+    }
+    
 ?>
 
 <html lang="es">
@@ -36,32 +40,15 @@
             ?>
             <!-- MAIN -->
             <main class="main row justify-content-center p-3">
-                <div class="accordion col-md-9">
+                <div class="col-md-9">
+                    
                     <?php
                         try {
                             db_connect();
-
-                            $categories = ["Cine y series", "Tecnología", "Turismo"];
-                            // loop for each category
-                            foreach ($categories as $key => $category) {
-                                echo 
-                                '<div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed  bg-secondary text-white" type="button" data-bs-toggle="collapse" data-bs-target="#'.$key.'" aria-expanded="true" aria-controls="collapseOne">'
-                                            . $category .
-                                        '</button>
-                                    </h2>
-                                    <div id="'.$key.'" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">';
-                                // loop for each thread of this category
-                                $query = "SELECT title, body, id_thread FROM threads WHERE category=?";
-                                echo thread_group_by($query,$category);
-
-                                echo
-                                        '</div>
-                                    </div>
-                                </div>';   
-                            }
+                            echo '<div type="button" class="card body text-white text-center w-100 d-flex flex-column justify-content-space-around p-3">'.show_thread($thr).'</div>';
+                            $query1= "SELECT comment, names FROM comments JOIN users USING(id_user) WHERE  id_thread=?";
+                            echo comment_group_by($query1, $thr);
+                           
                         } catch (Exception $e) {
                             //echo $e->getMessage();
                             header('Location: ../pages/maintenance.php');

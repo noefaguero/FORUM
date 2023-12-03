@@ -99,10 +99,95 @@ function records_count($table){
         $sql = $db->prepare("SELECT COUNT(*) FROM $table;");
         // Execute the query
         $sql->execute();
-        $num = $sql->fetch();
-            return $num[0];
+        $result = $sql->fetch();
+            return $result[0];
     } catch (Exception $e) {
         echo "Error en la consulta a la base de datos: " . $e->getMessage();
     }
+}
+
+/***************************** FOR SUBSCRIBER *********************************/
+
+function get_array($query, $key){
+    global $db;
+    try{
+        $sql = $db->prepare($query);
+        $sql->execute([$key]);
+        $result =  $sql->fetchAll();
+        $output = array();
+        
+        if ($result) {
+            foreach ($result as $row) {
+                $output[$row[0]] = $row[1];
+            }
+        }
+        return $output;
+    
+    } catch (Exception $e) {
+        echo "Error en la consulta a la base de datos: " . $e->getMessage();
+    }      
+}
+
+function thread_group_by($query, $key){
+    global $db;
+    try{
+        $sql = $db->prepare($query);
+        $sql->execute([$key]);
+        $result =  $sql->fetchAll();
+        if ($result) {
+            $output = '';
+            foreach ($result as $row) {
+                $output .= '<a href="./threads.php?thread='. $row[2] .'" class="color-link" >' . $row[0] . '</a><br><p>' . $row[1] . '</p>';
+            }
+            return $output;
+        } else {
+            return '<p>No hay resultados</p>';
+        }
+    } catch (Exception $e) {
+        echo "Error en la consulta a la base de datos: " . $e->getMessage();
+    }      
+}
+
+function comment_group_by($query, $thread, $subscriber = null){
+    global $db;
+    try{
+        $sql = $db->prepare($query);
+        
+        if($subscriber){
+            $sql->execute([$subscriber, $thread]);
+        } else {
+            $sql->execute([$thread]);
+        }
+        
+        $result =  $sql->fetchAll();
+        if ($result) {
+            $output = '';
+            foreach ($result as $row) {
+                $output .= '<div class="alert alert-light m-3" role="alert"><span class="fw-bold">' . $row[1] . '</span><p>' . $row[0] . '</p></div>';
+            }
+            return $output;
+        } else {
+            return '<p>No hay resultados</p>';
+        }
+    } catch (Exception $e) {
+        echo "Error en la consulta a la base de datos: " . $e->getMessage();
+    }      
+}
+
+function show_thread($id){
+    global $db;
+    try{
+        $sql = $db->prepare("SELECT title, body FROM threads WHERE id_thread=?;");
+        $sql->execute([$id]);
+        $result =  $sql->fetch();
+        if ($result) {
+            $output = '<h2>'.$result[0].'</h2><br><p>'.$result[1].'</p>';
+            return $output;
+        } else {
+            return '<p>El tema seleccionado no existe</p>';
+        }
+    } catch (Exception $e) {
+        echo "Error en la consulta a la base de datos: " . $e->getMessage();
+    }      
 }
 

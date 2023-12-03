@@ -3,7 +3,7 @@
     try {
         db_connect();
 
-        $comments = records_count("comments");
+        $comments = records_count("comments WHERE id_user=" . $_SESSION["id"]);
         $threads = records_count("threads");
         $editors = records_count("users WHERE rol='editor'");
         
@@ -34,23 +34,24 @@
             <div class="container-fluid p-0">        
                 <!-- links list -->
                 <ul class="navbar-nav w-75 p-2 mx-auto">
-                    <!-- comments -->
-                    <li class="nav-item">
-                        <a class="nav-link text-white d-flex justify-content-between" href="">
-                            <p>MIS COMENTARIOS</p>
-                            <p><?php echo $comments; ?></p>
-                        </a>
-                    </li>
                     <!-- threads -->
                     <li class="nav-item">
-                        <a class="nav-link text-white d-flex justify-content-between" href="">
+                        <a class="nav-link text-white d-flex justify-content-between" href="./index.php">
                             <p>TEMAS</p>
                             <p><?php echo $threads; ?></p>
                         </a>
                     </li>
+                    <!-- comments -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white d-flex justify-content-between" href="./comments.php">
+                            <p>MIS COMENTARIOS</p>
+                            <p><?php echo $comments; ?></p>
+                        </a>
+                    </li>
+                    
                     <!-- editors -->
                     <li class="nav-item">
-                        <a class="nav-link text-white d-flex justify-content-between" href="">
+                        <a class="nav-link text-white d-flex justify-content-between" href="./editors.php">
                             <p>EDITORES</p>
                             <p><?php echo $editors; ?></p>
                         </a>

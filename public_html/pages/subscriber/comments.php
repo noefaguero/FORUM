@@ -12,6 +12,7 @@
         check_inactivity($_SESSION["last_activity"]);
     }
     
+    
 ?>
 
 <html lang="es">
@@ -40,23 +41,22 @@
                     <?php
                         try {
                             db_connect();
-
-                            $categories = ["Cine y series", "Tecnología", "Turismo"];
+                            $query1 = "SELECT id_thread, title FROM comments JOIN threads USING(id_thread) WHERE comments.id_user = ?;";
+                            $threads = get_array($query1, $_SESSION["id"]);
                             // loop for each category
-                            foreach ($categories as $key => $category) {
+                            foreach ($threads as $key => $thread) {
                                 echo 
                                 '<div class="accordion-item">
                                     <h2 class="accordion-header">
                                         <button class="accordion-button collapsed  bg-secondary text-white" type="button" data-bs-toggle="collapse" data-bs-target="#'.$key.'" aria-expanded="true" aria-controls="collapseOne">'
-                                            . $category .
+                                            . $thread .
                                         '</button>
                                     </h2>
                                     <div id="'.$key.'" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">';
                                 // loop for each thread of this category
-                                $query = "SELECT title, body, id_thread FROM threads WHERE category=?";
-                                echo thread_group_by($query,$category);
-
+                                $query2 = "SELECT comment, names FROM comments JOIN users USING(id_user) WHERE comments.id_user=? and id_thread=?";
+                                echo comment_group_by($query2, $key, $_SESSION["id"]);
                                 echo
                                         '</div>
                                     </div>

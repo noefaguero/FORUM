@@ -29,7 +29,11 @@ function check_user($users, $inputName, $inputKey){
     return false;
 }
 
-//Check if some variable is empty
+/**
+ * Check empty fiedls.
+ * 
+ * @return array Empty fields.
+ */
 function empty_field(){
     $errors = [];
     foreach ($_POST as $field => $value) {
@@ -40,6 +44,13 @@ function empty_field(){
     return $errors;
 }
 
+/**
+ * Highlight empty fields in red.
+ * 
+ * @param string $field Field to check.
+ * @param array $errors Array of empty fields.
+ * @return string Bootstrap classes for the style.
+ */
 function show_error($field, $errors){
     if(in_array($field, $errors)){
         return "form-control border-0 bg-danger-subtle";
