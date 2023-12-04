@@ -5,10 +5,6 @@
     box-sizing: border-box;
 }
 
-.body{
-    background-color: rgb(4, 82, 113);
-}
-
 .color-link{
     color: rgb(4, 82, 113);
     text-decoration: none;
