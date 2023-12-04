@@ -45,3 +45,4 @@ function check_inactivity($last_activity){
         $_SESSION["last_activity"] = $current_time;
     }
 }
+

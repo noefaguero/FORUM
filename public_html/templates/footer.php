@@ -24,14 +24,14 @@
         </div>
     </div>
     <!-- section with logo and link list -->
-    <div class="bg-light">
+    <div class="bg-body-tertiary">
         <div class="container d-flex flex-column align-items-center">
             <!-- links list-->
             <ul class="nav fs-6 gap-4 justify-content-center py-3">
                 <li class="nav-item"><a class="nav-link light-blue" href="">AVISO LEGAL</a></li>
                 <li class="nav-item"><a class="nav-link light-blue" href="">POLÍTICA DE PRIVACIDAD</a></li>
                 <li class="nav-item"><a class="nav-link light-blue" href="">POLÍTICA DE COOKIES</a></li>
-                <li class="nav-item"><a class="nav-link light-blue" href="">CONDICIONES DE VENTA</a></li>
+                <li class="nav-item"><a class="nav-link light-blue" href="">CONDICIONES GENERALES</a></li>
                 <li class="nav-item"><a class="nav-link light-blue" href="">CONTACTO</a></li>
             </ul>
         </div>

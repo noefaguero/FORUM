@@ -2,6 +2,7 @@
 <?php
     include $_SERVER['DOCUMENT_ROOT'].'/Forum/private/includes/db_functions.php';
     include $_SERVER['DOCUMENT_ROOT'].'/Forum/private/includes/session_functions.php';
+    include $_SERVER['DOCUMENT_ROOT'].'/Forum/private/includes/user_functions.php';
     
     session_start();
     if(!isset($_SESSION["name"])){
@@ -20,6 +21,11 @@
             set_session_option(SHORT);
              $switch ='';
         }
+        if (isset($_POST["theme"])){
+            $color = htmlspecialchars($_POST["theme"]);
+            setcookie("theme", $color , time()+604800 ,"/");
+        }
+       
     } else {
        if ($_COOKIE["session_option"] == EXTENDED ) {
             $switch ='checked';
@@ -38,7 +44,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
         <link rel="stylesheet" href="../../css/styles.css">
+        <link rel="stylesheet" href="<?php echo check_theme($_COOKIE["theme"]); ?>">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+        
         <title>NEXT FORUM</title>
     </head> 
     <!-- container -->
@@ -58,8 +66,8 @@
                     <!-- login card -->
                     <article class="col-5 m-5 p-0 card border-0">
                         <!-- card header -->
-                        <div class="card-header d-flex justify-content-center">
-                            <h2 class="fs-3">PREFERENCIAS</h2>
+                        <div class="card-header bg-secondary d-flex justify-content-center">
+                            <h2 class="fs-3 text-white">PREFERENCIAS</h2>
                         </div>
                         <!-- card footer -->
                         <div class="p-2">
@@ -69,6 +77,15 @@
                                     <input class="form-check-input" name="extended" type="checkbox"  role="switch" id="extended" <?php echo $switch; ?> >
                                     <label class="form-check-label" for="extended">Sesión ampliada</label>
                                 </div>
+                                <div class="d-flex gap-4 justify-content-center align-items-center mb-5">
+                                    <label class="form-check-label" for="theme">Tema</label>
+                                    <select class="form-select" id="theme" name="theme" aria-label="Default select example">
+                                        <option value="light">light</option>
+                                        <option value="dark">dark</option>
+                                    </select>
+                                </div>
+                               
+                               
                                 <input type="submit" class="btn btn-secondary border-0 dark-blue text-white btn-lg rounded-5 w-100 my-3" value="GUARDAR">
                             </form>
                         </div>

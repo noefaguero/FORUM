@@ -27,7 +27,7 @@ function db_connect() {
 /**
  * Close the connection to the database
  * 
- * @global PDO $db Connection to the data base
+ * @global PDO $db Connection to the database
  */
 function db_disconnect() {
     global $db;
@@ -36,6 +36,14 @@ function db_disconnect() {
 
 /******************************** FOR LOG IN **********************************/
 
+/**
+ * Check if a user and password match
+ * 
+ * @global PDO $db Connection to the data base
+ * @param string $inputUser Input of the user name or email
+ * @param string $inputKey Input of the password
+ * @return boolean 
+ */
 function user_exist($inputUser, $inputKey) {
     global $db;
     try{
@@ -66,7 +74,7 @@ function user_exist($inputUser, $inputKey) {
 
 /**
  * 
- * @global PDO $db Connection to the data base
+ * @global PDO $db Connection to the database
  * @param string $username Name of the user
  * @param string $rol Rol of the user
  * @param string $gender Gender of the user
@@ -84,7 +92,7 @@ function insert_user($username, $rol, $gender, $email, $pw){
     }
 }
 
-/******************************** FOR ASIDE ***********************************/
+/******************************* FOR ASIDE ************************************/
 
 /**
  * Count the rows of a table
@@ -106,8 +114,16 @@ function records_count($table){
     }
 }
 
-/***************************** FOR SUBSCRIBER *********************************/
+/*************************** SUBSCRIBER SELECTIONS ****************************/
 
+/**
+ * Get an array from a query
+ * 
+ * @global PDO $db Connection to the database
+ * @param string $query Database query statement
+ * @param mixed $key Filtering parameter.
+ * @return array Array with the elements.
+ */
 function get_array($query, $key){
     global $db;
     try{
@@ -128,6 +144,14 @@ function get_array($query, $key){
     }      
 }
 
+/**
+ * Group the threads
+ * 
+ * @global PDO $db Connection to the database
+ * @param string $query Database query statement
+ * @param mixed $key Thread category of the editor ID
+ * @return string
+ */
 function thread_group_by($query, $key){
     global $db;
     try{
@@ -148,6 +172,15 @@ function thread_group_by($query, $key){
     }      
 }
 
+/**
+ * Group the comments.
+ * 
+ * @global PDO $db Connection to the database
+ * @param string $query Database query statement
+ * @param integer $thread ID of the thread.
+ * @param integer $subscriber ID of the subscriber
+ * @return string HTML code with the content of the comments.
+ */
 function comment_group_by($query, $thread, $subscriber = null){
     global $db;
     try{
@@ -163,7 +196,63 @@ function comment_group_by($query, $thread, $subscriber = null){
         if ($result) {
             $output = '';
             foreach ($result as $row) {
-                $output .= '<div class="alert alert-light m-3" role="alert"><span class="fw-bold">' . $row[1] . '</span><p>' . $row[0] . '</p></div>';
+                if($row[1] == $_SESSION["name"]){
+                    $output .= 
+                        '<div class="alert alert-light m-3" role="alert">
+                            <span class="fw-bold">' . $row[1] . '</span>
+                            <p>' . $row[0] . '</p>
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-secondary body" data-bs-toggle="modal" data-bs-target="#update'. $row[2] .'">
+                                    <i class="fa-solid fa-pen text-white"></i>
+                                </button>
+                                
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#remove'. $row[2] .'">
+                                    <i class="fa-solid fa-trash text-white"></i>
+                                </button>
+                            </div>
+                        </div> 
+                        <div class="modal fade" id="remove'. $row[2] .'" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">¿Seguro que quieres eliminar este comentario?</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <form action="../../../private/handlers/comments_handlers/remove_comment.php" method="POST">
+                                            <input type="hidden" name="id_remove" value="'. $row[2] .'">
+                                            <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Sí</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>    
+                        <div class="modal fade" id="update'. $row[2] .'" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modificar comentario</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="../../../private/handlers/comments_handlers/update_comment.php" method="POST" class="row">
+                                            <input type="hidden" name="id_update" value="'. $row[2] .'">
+                                            <textarea name="newcomment" rows="5" cols="10">'. $row[0] .'</textarea>
+                                            <button type="submit" class="btn btn-secondary body mt-3 text-white" data-bs-dismiss="modal">Guardar</button>
+                                        </form>
+                                    </div>
+                                    
+                                </div>
+                           </div>
+                        </div>';
+
+                } else {
+                    $output .= '<div class="alert alert-light m-3" role="alert">
+                                    <span class="fw-bold">' . $row[1] . '</span>
+                                    <p>' . $row[0] . '</p>
+                                </div>';
+                } 
             }
             return $output;
         } else {
@@ -174,6 +263,13 @@ function comment_group_by($query, $thread, $subscriber = null){
     }      
 }
 
+/**
+ * Show a thread.
+ * 
+ * @global PDO $db Connection to the database
+ * @param string $id ID of the thread to show.
+ * @return string The content of the thread.
+ */
 function show_thread($id){
     global $db;
     try{
@@ -191,3 +287,58 @@ function show_thread($id){
     }      
 }
 
+/****************************** INSERT COMMENT ****************++***************/
+
+/**
+ * Insert a new comment.
+ * 
+ * @global PDO $db Connection to the database
+ * @param string $newcomment The body of the new comment.
+ * @param integer $id_thread ID of the thread.
+ * @param integer $id_user ID of the user.
+ */
+function insert_comment($newcomment, $id_thread, $id_user){
+    global $db;
+    try{
+        $sql = $db->prepare("INSERT INTO comments(comment, id_thread, id_user) VALUES(?, ?, ?);");
+        $sql->execute([$newcomment, $id_thread, $id_user]);
+    } catch (Exception $e) {
+        echo "Error en la consulta a la base de datos: " . $e->getMessage();
+    }  
+}
+
+/****************************** UPDATE COMMENT *********************************/
+
+/**
+ * Update the body of a comment
+ * 
+ * @global PDO $db Connection to the database
+ * @param string $newcomment The body of the comment
+ * @param integer $id_comment ID of the comment
+ */
+function update_comment($newcomment, $id_comment){
+    global $db;
+    try{
+        $sql = $db->prepare("UPDATE comments SET comment = $newcomment WHERE id_comment=? ;");
+        $sql->execute([$id_comment]);
+    } catch (Exception $e) {
+        echo "Error en la consulta a la base de datos: " . $e->getMessage();
+    }  
+}
+
+/**************************** DELETE COMMENT **********************************/
+
+/**
+ * 
+ * @global PDO $db Connection to the database
+ * @param type $id_comment
+ */
+function delete_comment($id_comment){
+    global $db;
+    try{
+        $sql = $db->prepare("DELETE FROM comments WHERE id_comment=? ;");
+        $sql->execute([$id_comment]);
+    } catch (Exception $e) {
+        echo "Error en la consulta a la base de datos: " . $e->getMessage();
+    }  
+}

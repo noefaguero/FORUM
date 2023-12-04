@@ -58,3 +58,16 @@ function show_error($field, $errors){
         return "form-control border-0 bg-light";
     }
 }
+
+/**
+ * Check the color theme.
+ * 
+ * @param string $cookie Value of the theme cookie
+ * @return string Path to the stylesheet.
+ */ 
+function check_theme($cookie){
+    if(isset($cookie)){
+        $string = htmlspecialchars($cookie);
+        return "../../css/$string.css";
+    }
+}
