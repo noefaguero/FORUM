@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 <?php
     
-    include $_SERVER['DOCUMENT_ROOT'].'/Forum/private/includes/db_functions.php';
-    include $_SERVER['DOCUMENT_ROOT'].'/Forum/private/includes/session_functions.php';
+    require '../../../private/includes/session_functions.php';
     
     session_start();
     if(!isset($_SESSION["name"])){
         header("Location: ../../index.php?redirected=true");
     }
+    
     if (isset($_SESSION["last_activity"])){
         check_inactivity($_SESSION["last_activity"]);
     }
@@ -39,12 +39,26 @@
          <!-- container -->
             <div class="container">
                 <!-- MAIN -->
-                <main class="main dark-blue">
+                <main class="dark-blue">
                     
                     <h1>Bienvenido editor:</h1>
                     <h2>Creemos un nuevo hilo:</h2>
                     
-                    <form action="action">
+                    <?php
+                    
+                    if(isset($_GET['error']) && $_GET['error']===true ){
+                        echo '<div class="alert alert-light col-10 card__account" role="alert">Inserte datos de un hilo para insertar.</div>';
+                    }
+                    if(isset($_GET['correct']) && $_GET['correct']===true ){
+                        echo '<div class="alert alert-light col-10 card__account" role="alert">Hilo insertado correctamente.</div>';
+                    }
+                    if(isset($_GET['errorex']) && $_GET['errorex']===true ){
+                        echo '<div class="alert alert-light col-10 card__account" role="alert">Ha habido un error, vuelve a intentarlo más tarde.</div>';
+                    }
+                    
+                    ?>
+                    
+                    <form action="../../../private/handlers/threadsHandlers/createThread.php" method="POST">
                         <label>Título del hilo:</label>
                         <input type="text" name="title">
                         
@@ -54,16 +68,16 @@
                         </textarea>
                         
                         <label>Categoría:</label>
-                        <select name="categoria">
-                            <option disabled selected value="value">Escoger</option>
-                            <option value="first">Cine y series</option>
-                            <option value="second">Tecnologia</option>
-                            <option value="third">Ciencia</option>
-                            <option value="value">Matematica</option>
+                        <select name="category">
+                            <option disabled selected value="escoger">Escoger</option>
+                            <option value="cineYSeries">Cine y series</option>
+                            <option value="tecnologia">Tecnologia</option>
+                            <option value="ciencia">Ciencia</option>
+                            <option value="matematica">Matematica</option>
                   
                         </select>
 
-                        
+                        <input type="submit" name="submit">
                         
                     </form>
                     

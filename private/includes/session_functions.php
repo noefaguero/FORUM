@@ -39,9 +39,42 @@ function check_inactivity($last_activity){
         // delete the session cookie
         setcookie(session_name(),"", time()-1000,"/");
         
-        header("Location: ../../index.php?timePass=TRUE");
+        header("Location: ../../../public_html/index.php?timePass=TRUE");
  
     } else {
         $_SESSION["last_activity"] = $current_time;
+    }
+}
+
+
+/**
+ * Function to check if an string is empty
+ * 
+ * @param String $data //
+ * @return bool //If is empty returns true if not returns false
+ */
+function isEmpty($data){
+    trim($data);
+    
+    if($data === ""){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+/**
+ * Function to check if the select havent been changed
+ * 
+ * @param type $checkData
+ * @return bool //If the check is escoger returns true elses return false
+ */
+function check_select($checkData){
+    if($checkData=="escoger"){
+        return true;
+    }
+    else{
+        return false;
     }
 }

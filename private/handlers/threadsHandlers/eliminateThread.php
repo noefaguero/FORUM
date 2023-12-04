@@ -1,13 +1,16 @@
 <?php
 
-    require $_SERVER['DOCUMENT_ROOT'].'/ForumCorect/private/includes/config_db.php';
-    include $_SERVER['DOCUMENT_ROOT'].'/ForumCorect/private/includes/sessionFunctions.php';
-    
+    include $_SERVER['DOCUMENT_ROOT'] . '/Forum/private/includes/db_functions.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/Forum/private/includes/session_functions.php';
+
     session_start();
-    if (!isset($_SESSION["user"])) {
+    if (!isset($_SESSION["name"])) {
         header("Location: ../../index.php?redirected=true");
     }
-    checkInactivityTimePassed($_SESSION["lastAcces"]);
+
+    if (isset($_SESSION["last_activity"])) {
+        check_inactivity($_SESSION["last_activity"]);
+    }
     
     
     //If there havent been any value sended it will return
@@ -18,11 +21,23 @@
             header("Location: ../../../public_html/pages/editor/listModifiePage.php?redirected=true");   
         }
         
-        //If everything is okay, it will prepare the statement to delete that thread
-        $deleteThread=$bd->prepare("DELETE FROM threads WHERE id_thread =? AND id_user = ?");   
-        
+        //Save the variables that we will use in the future statements
         $idThread=htmlspecialchars($_GET["idThread"]);
         $idUser=htmlspecialchars($_SESSION["id"]);
+        
+        //Open the connection
+        db_connect();
+        
+        $deleteCommentsOfThreadsToDelete=$db->prepare("DELETE FROM comments WHERE id_thread =?");
+        
+        $deleteCommentsOfThreadsToDelete->bindParam(1, $idThread);
+        
+        $deleteCommentsOfThreadsToDelete->execute();
+        
+        //If everything is okay, it will prepare the statement to delete that thread
+        $deleteThread=$db->prepare("DELETE FROM threads WHERE id_thread =? AND id_user = ?");
+        
+        //Put the data in the sql statement
         $deleteThread->bindParam(1, $idThread);
         $deleteThread->bindParam(2, $idUser);
         

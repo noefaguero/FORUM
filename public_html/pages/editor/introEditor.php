@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <?php
     
-    include $_SERVER['DOCUMENT_ROOT'].'/Forum/private/includes/session_functions.php';
+    require '../../../private/includes/session_functions.php';
     
     session_start();
     if(!isset($_SESSION["name"])){
         header("Location: ../../index.php?redirected=true");
     }
+    
     if (isset($_SESSION["last_activity"])){
         check_inactivity($_SESSION["last_activity"]);
     }
+    
 ?>
 <html lang="es">
     <head>
@@ -44,8 +46,7 @@
                     
                     <div class="d-flex flex-column">
                         <a class="btn btn-primary" href="./createThreadPage.php">Añadir un nuevo foro.</a>
-                        <a class="btn btn-secondary" href="./listModifiePage.php">Modificar un foro existente.</a>
-                        <a class="btn btn-danger" href="url">Eliminar un foro existente.</a>
+                        <a class="btn btn-secondary" href="./listModifiePage.php">Modificar o eliminar un foro existente.</a>
                     </div>
                     
                     
