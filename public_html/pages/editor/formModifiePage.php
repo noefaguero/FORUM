@@ -4,14 +4,15 @@
 <!DOCTYPE html>
 <?php
     
-    include $_SERVER['DOCUMENT_ROOT'].'/Forum/private/includes/db_functions.php';
-    include $_SERVER['DOCUMENT_ROOT'].'/Forum/private/includes/session_functions.php';
-    
+    include $_SERVER['DOCUMENT_ROOT'] . '/Forum/private/includes/db_functions.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/Forum/private/includes/session_functions.php';
+
     session_start();
-    if(!isset($_SESSION["name"])){
+    if (!isset($_SESSION["name"])) {
         header("Location: ../../index.php?redirected=true");
     }
-    if (isset($_SESSION["last_activity"])){
+
+    if (isset($_SESSION["last_activity"])) {
         check_inactivity($_SESSION["last_activity"]);
     }
 ?>
@@ -47,11 +48,76 @@
                     <h2>Que hilo quieres modificar:</h2>
                     
                     
+                    <?php
+                    if (isset($_GET["fillErr"]) && $_GET["fillErr"] === true) {
+                        echo '<div class="alert alert-light col-10 card__account" role="alert">Rellene todos los datos.</div>';
+                        $fillErr=true;
+                    }
+                    $titleChecker = false;
+                    $bodyChecker = false;
+                    
+                    
+                    
+                    if(isset($_GET['beforTitle']) ){
+                        $beforeTitle = filter_input(INPUT_GET, "beforTitle", FILTER_SANITIZE_STRING);
+                    }
+                    else{
+                        $beforeTitle="";
+                    }
+                    
+                    if(isset($_GET['beforBody']) ){
+                        $beforeBody = filter_input(INPUT_GET, "beforBody", FILTER_SANITIZE_STRING);
+                    }
+                    else{
+                        $beforeBody="";
+                    }
+                    
+                    if(isset($_GET['beforIdThread']) ){
+                        $idThread = filter_input(INPUT_GET, "beforIdThread", FILTER_SANITIZE_STRING);
+                    }
+                    else{
+                        $beforeBody="";
+                    }
+                    
+                    if(isEmpty($beforeTitle) ){
+                        $titleChecker=true;
+                    }
+                    if(isEmpty($beforeBody) ){
+                        $bodyChecker=true;
+                    }
+                    
+                    ?>
+                    
+                    <form action="../../../private/handlers/threadsHandlers/modifieThread.php" method="POST">
+                        <label>Título del hilo:</label>
+                        <input type="text" name="title" placeholder="<?php if($titleChecker==false){echo $beforeTitle;}?>">
+                        
+                        
+                        <label>Cuerpo:</label>
+                        <textarea id="id" name="body" rows="5" cols="20" placeholder="<?php if($bodyChecker==false){echo $beforeBody;}?>">
+                        </textarea>
+                        
+                        <label>Categoría:</label>
+                        <select name="category">
+                            <option disabled selected value="escoger">Escoger</option>
+                            <option value="Cine y series">Cine y series</option>
+                            <option value="Tecnología">Tecnologia</option>
+                            <option value="Ciencia">Ciencia</option>
+                            <option value="Matematica">Matematica</option>
+                  
+                        </select>
+
+                        <input type="hidden" name="idThreadToUpdate" value="<?= $idThread ?>">
+                        
+                        <input type="submit" name="submit">
+                        
+                    </form>
+                    
                 </main>
             </div>
          
         
-        <h1> Bienvenido <?php echo htmlspecialchars($_SESSION["user"]);?> </h1>
+        <h1> Bienvenido <?php echo htmlspecialchars($_SESSION["name"]);?> </h1>
         <br>
         <a href="../../../private/handlers/logout.php">Salir</a>
     </body>
