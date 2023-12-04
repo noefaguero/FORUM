@@ -18,13 +18,13 @@
     
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         
-        if(!isset($_POST['title']) && $_POST['title']=== '' ){
+        if(!isset($_POST['title']) || $_POST['title']=== '' ){
             $titleCheck = true;
         }
-        if(!isset($_POST['body']) && $_POST['body']=== '' ){
+        if(!isset($_POST['body']) || $_POST['body']=== '' ){
             $bodyCheck = true;
         }
-        if(!isset($_POST['category']) && $_POST['category']=== '' ){
+        if(!isset($_POST['category']) || $_POST['category']=== '' ){
             $categoryCheck = true;
         }
         
@@ -36,7 +36,7 @@
             
         check_select($category);
         
-        if($titleCheck===false && $bodyCheck ===false && $categoryCheck===false){
+        if($titleCheck==false && $bodyCheck ==false && $categoryCheck==false){
             db_connect();
             
             //Statements to create the thread in the bd
@@ -60,7 +60,7 @@
             
         }
         else{
-            
+            header("Location: ../../../public_html/pages/editor/createThreadPage.php?fill=true&title=".$title."&body=". $body. " ");
         }
         
     }

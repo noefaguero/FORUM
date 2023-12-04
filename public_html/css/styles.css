@@ -69,3 +69,10 @@
     font-weight: 900;
 }
 
+.button_size{
+    height: 50px;
+    align-items: center;
+    width: 40%;
+    margin-left: 50%;
+}
+

@@ -2,86 +2,83 @@
 <!DOCTYPE html>
 <?php
     
-    require '../../../private/includes/session_functions.php';
-    
+    include $_SERVER['DOCUMENT_ROOT'] . '/Forum/private/includes/db_functions.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/Forum/private/includes/session_functions.php';
+
     session_start();
-    if(!isset($_SESSION["name"])){
+    if (!isset($_SESSION["name"])) {
         header("Location: ../../index.php?redirected=true");
     }
-    
-    if (isset($_SESSION["last_activity"])){
+
+    if (isset($_SESSION["last_activity"])) {
         check_inactivity($_SESSION["last_activity"]);
     }
 ?>
 <html lang="es">
     <head>
-        <meta charset="UTF-8">
-        <title>Modo edición-NextForum</title>
-        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-        <link rel="stylesheet" href="../public_html/css/styles.css">
+        <link rel="stylesheet" href="../../css/styles.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-        
-    </head>
-    <body>
-
-        <header>
-            <nav class="navbar bg-body-tertiary">
-                <div class="container-fluid d-flex justify-content-evenly">
-                    <p class="m-0 text-secondary fs-4 mt-5">Es el momento de opinar</p>
-                    <div class="bg-black border-0 rounded-4 p-3 m-3">
-                        <span class="logo mx-auto my-3 fs-1 fw-2 text-white">nextFORUM</span>
-                    </div>
-                    <p class="m-0 text-secondary fs-4 mt-5">Comparte tu experiencia</p>
-                </div>
-            </nav>
-        </header>
-         <!-- container -->
-            <div class="container">
-                <!-- MAIN -->
-                <main class="dark-blue">
+        <title>NEXT FORUM</title>
+    </head> 
+       <!-- container -->
+    <body class="container-fluid p-0 m-0 row position-relative">
+        <!-- ASIDE -->
+        <?php
+            include $_SERVER['DOCUMENT_ROOT'].'/Forum/public_html/templates/aside_editor.php';
+        ?>
+        <div class="p-0 col-9">
+            <!-- HEADER -->
+            <?php
+                include $_SERVER['DOCUMENT_ROOT'].'/Forum/public_html/templates/header.php';
+            ?>
+            <!-- MAIN -->
+            <main class="main row justify-content-center p-3">
                     
-                    <h1>Bienvenido editor:</h1>
-                    <h2>Creemos un nuevo hilo:</h2>
-                    
+                <form class="d-flex flex-column w-50" action="../../../private/handlers/threadsHandlers/createThread.php" method="POST">
                     <?php
                     
                     if(isset($_GET['error']) && $_GET['error']===true ){
-                        echo '<div class="alert alert-light col-10 card__account" role="alert">Inserte datos de un hilo para insertar.</div>';
+                        echo '<div class="alert alert-danger card__account" role="alert">Inserte datos de un hilo para insertar.</div>';
                     }
-                    if(isset($_GET['correct']) && $_GET['correct']===true ){
-                        echo '<div class="alert alert-light col-10 card__account" role="alert">Hilo insertado correctamente.</div>';
+                    if(isset($_GET['correct']) && $_GET['correct']==true ){
+                        echo '<div class="alert alert-success col-10 card__account" role="alert">Hilo insertado correctamente.</div>';
                     }
-                    if(isset($_GET['errorex']) && $_GET['errorex']===true ){
-                        echo '<div class="alert alert-light col-10 card__account" role="alert">Ha habido un error, vuelve a intentarlo más tarde.</div>';
+                    if(isset($_GET['errorex']) && $_GET['errorex']==true ){
+                        echo '<div class="alert alert-danger col-10 card__account" role="alert">Ha habido un error, vuelve a intentarlo más tarde.</div>';
                     }
+                    if(isset($_GET['fill']) && $_GET['fill']==true ){
+                        echo '<div class="alert alert-danger card__account" role="alert">Tiene que rellenar todos los campos.</div>';
+                    }
+                    ?>    
                     
-                    ?>
-                    
-                    <form action="../../../private/handlers/threadsHandlers/createThread.php" method="POST">
-                        <label>Título del hilo:</label>
-                        <input type="text" name="title">
-                        
-                        <label>Cuerpo:</label>
-                        <textarea id="id" name="body" rows="5" cols="20" placeholder="Cuerpo de tu hilo">
-                            
-                        </textarea>
-                        
-                        <label>Categoría:</label>
-                        <select name="category">
-                            <option disabled selected value="escoger">Escoger</option>
-                            <option value="cineYSeries">Cine y series</option>
-                            <option value="tecnologia">Tecnologia</option>
-                            <option value="ciencia">Ciencia</option>
-                            <option value="matematica">Matematica</option>
-                  
-                        </select>
+                    <label>Título del hilo:</label>
+                    <input type="text" name="title" placeholder="Titulo" value="<?php if(isset($_GET['title']) ){echo $_GET['title'];}?>">
 
-                        <input type="submit" name="submit">
+                    <label>Cuerpo:</label>
+                    <textarea id="id" name="body" rows="5" cols="20" placeholder="Cuerpo de tu hilo"><?php if(isset($_GET['body'])){echo $_GET['body'];}?></textarea>
+
+                    <label>Categoría:</label>
+                    <select name="category">
+                        <option disabled selected value="escoger">Escoger</option>
+                        <option value="cineYSeries">Cine y series</option>
+                        <option value="tecnologia">Tecnologia</option>
+                        <option value="ciencia">Ciencia</option>
+                        <option value="matematica">Matematica</option>
+
+                    </select>
+
+                    <input class="mt-3 btn btn-primary" type="submit" name="submit">
                         
-                    </form>
+                </form>
                     
                 </main>
+            <!-- FOOTER -->
+                <?php
+                    include $_SERVER['DOCUMENT_ROOT'].'/Forum/public_html/templates/footer.php';
+                ?>
             </div>
          
         

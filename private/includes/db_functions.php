@@ -191,3 +191,57 @@ function show_thread($id){
     }      
 }
 
+//*****************FOR EDITOR*****************************
+
+/**
+ * Function to count the number of threads of a table
+ * 
+ * @global PDO $db //BD
+ * @param String $table //Name of a table of the db
+ * @return //returns the number of columns
+ */
+function show_numThreads($table, $idUser){
+    global $db;
+    try{
+        trim($idUser);
+        // Prepared statement to count the records of a table
+        $sql = $db->prepare("SELECT COUNT(*) FROM $table WHERE id_user=?;");
+        $sql->bindParam(1, $idUser );
+        
+        // Execute the query
+        $sql->execute();
+        $result = $sql->fetch();
+        
+        return $result[0];
+    } catch (Exception $e) {
+        echo "Error en la consulta a la base de datos: " . $e->getMessage();
+    }
+}
+
+/**
+ * Function to create the threads
+ * 
+ * @global PDO $db
+ * @param type $query
+ * @param type $key
+ * @return string
+ */
+function thread_group_by_editor($query, $key){
+    global $db;
+    try{
+        $sql = $db->prepare($query);
+        $sql->execute([$key]);
+        $result =  $sql->fetchAll();
+        if ($result) {
+            $output = '';
+            foreach ($result as $row) {
+                $output .= '<a href="./threadsEditor.php?thread='. $row[2] .'" class="color-link" >' . $row[0] . '</a><br><p>' . $row[1] . '</p>';
+            }
+            return $output;
+        } else {
+            return '<p>No hay resultados</p>';
+        }
+    } catch (Exception $e) {
+        echo "Error en la consulta a la base de datos: " . $e->getMessage();
+    }      
+}

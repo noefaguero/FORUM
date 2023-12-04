@@ -4,6 +4,7 @@
     include $_SERVER['DOCUMENT_ROOT'] . '/Forum/private/includes/session_functions.php';
 
     session_start();
+    
     if (!isset($_SESSION["name"])) {
         header("Location: ../../index.php?redirected=true");
     }
@@ -18,20 +19,26 @@
     
     $idChecker = false;
     
+    //Check if data sended to the page by post
+    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+        header("Location: ../../../public_html/pages/editor/listModifiePage.php");
+    }
+    
+    //Check if all the variables has values
     if(!isset($_POST['title']) ){
-        $beforeTitleChecker = false;
+        $afterTitleChecker = true;
     }
     if(!isset($_POST['body']) ){
-        $beforeBodyChecker = false;
+        $afterBodyChecker = true;
     }
     if(!isset($_POST['category']) ){
-        $beforeCategoryChecker = false;
+        $afterCategoryChecker = true;
     }
-    
     if(!isset($_POST['idThreadToUpdate']) ){
-        $idChecker = false;
+        $idChecker = true;
     }
     
+    //Filter the values
     $title = trim( filter_input(INPUT_POST, "title", FILTER_SANITIZE_STRING)); 
     $category = trim(filter_input(INPUT_POST, "category", FILTER_SANITIZE_STRING)); 
     $body = trim(filter_input(INPUT_POST, "body", FILTER_SANITIZE_STRING)); 
@@ -45,11 +52,11 @@
     
     //Check if any data is empty
     if($afterCategoryChecker==true || isEmpty($title) || isEmpty($category) || isEmpty($body) || isEmpty($id__User) || isEmpty($id_thread) ){
-        header("Location: ../../../public_html/pages/editor/formModifiePage.php?fillErr=true");
+        header("Location: ../../../public_html/pages/editor/formModifiePage.php?fillErr=true&title=".$title."&body=".$body."");
     }
     
     
-    if($afterTitleChecker===false && $afterBodyChecker ===false && $afterCategoryChecker===false && $idChecker === false){
+    if($afterTitleChecker==false && $afterBodyChecker ==false && $afterCategoryChecker==false && $idChecker == false){
         db_connect();
         global $db;
         //Statements to create the thread in the bd

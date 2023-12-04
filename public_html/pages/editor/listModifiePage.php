@@ -16,31 +16,26 @@ if (isset($_SESSION["last_activity"])) {
 
 <html lang="es">
     <head>
-        <meta charset="UTF-8">
-        <title>Modo edición-NextForum</title>
-
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
         <link rel="stylesheet" href="../../css/styles.css">
-
-    </head>
-    <body>
-
-        <header>
-            <nav class="navbar bg-body-tertiary">
-                <div class="container-fluid d-flex justify-content-evenly">
-                    <p class="m-0 text-secondary fs-4 mt-5">Es el momento de opinar</p>
-                    <div class="bg-black border-0 rounded-4 p-3 m-3">
-                        <span class="logo mx-auto my-3 fs-1 fw-2 text-white">nextFORUM</span>
-                    </div>
-                    <p class="m-0 text-secondary fs-4 mt-5">Comparte tu experiencia</p>
-                </div>
-            </nav>
-        </header>
-        <!-- container -->
-        <div class="container">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+        <title>NEXT FORUM</title>
+    </head> 
+       <!-- container -->
+    <body class="container-fluid p-0 m-0 row position-relative">
+        <!-- ASIDE -->
+        <?php
+            include $_SERVER['DOCUMENT_ROOT'].'/Forum/public_html/templates/aside_editor.php';
+        ?>
+        <div class="p-0 col-9">
+            <!-- HEADER -->
+            <?php
+                include $_SERVER['DOCUMENT_ROOT'].'/Forum/public_html/templates/header.php';
+            ?>
             <!-- MAIN -->
-            <main class="main dark-blue">
+            <main class="main row justify-content-center p-3">
 
                 <?php
                 if (isset($_GET["error"]) && $_GET["error"] === true) {
@@ -50,12 +45,7 @@ if (isset($_SESSION["last_activity"])) {
                 if (isset($_GET["correctUpdate"]) && $_GET["correctUpdate"] === true) {
                     echo '<div class="alert alert-light col-10 card__account" role="alert">Cambio realizado correctamente.</div>';
                 }
-                ?>
-
-                <h1>Bienvenido editor:</h1>
-                <h2>Que hilo quieres modificar:</h2>
-
-                <?php
+                
                 global $db;
                 db_connect();
                 //Prepare the statement to select all the threads that the editor has created
@@ -92,7 +82,7 @@ if (isset($_SESSION["last_activity"])) {
 
                         echo '<div class="list__data">' . $thread["body"] . '</div>';
 
-                        echo '<div class="list__data"> <a class="btn btn-secondary list__link" href="./formModifiePage.php?&beforTitle=' . $thread["title"] . '&beforBody=' . $thread["body"] . '&beforIdThread=' . $thread["id_thread"] . '">Modificar.</a> </div>';
+                        echo '<div class="list__data"> <a class="btn btn-secondary list__link" href="./formModifiePage.php?&title=' . $thread["title"] . '&body=' . $thread["body"] . '&beforIdThread=' . $thread["id_thread"] . '">Modificar.</a> </div>';
 
                         echo '<div class="list__data"> <a class="btn btn-secondary list__link" href="">Comentarios.</a> </div>';
 
