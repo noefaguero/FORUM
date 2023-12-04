@@ -219,6 +219,31 @@ function show_numThreads($table, $idUser){
 }
 
 /**
+ * Function to count the number of threads of a table
+ * 
+ * @global PDO $db //BD
+ * @param String $table //Name of a table of the db
+ * @return //returns the number of columns
+ */
+function show_numComments($idUser){
+    global $db;
+    try{
+        trim($idUser);
+        // Prepared statement to count the records of a table
+        $sql = $db->prepare("SELECT COUNT(*) FROM `comments` JOIN `threads` ON comments.id_thread = threads.id_thread WHERE threads.id_user=?;");
+        $sql->bindParam(1, $idUser );
+        
+        // Execute the query
+        $sql->execute();
+        $result = $sql->fetch();
+        
+        return $result[0];
+    } catch (Exception $e) {
+        echo "Error en la consulta a la base de datos: " . $e->getMessage();
+    }
+}
+
+/**
  * Function to create the threads
  * 
  * @global PDO $db

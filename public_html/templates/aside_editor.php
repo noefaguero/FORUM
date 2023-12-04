@@ -3,7 +3,7 @@
     try {
         db_connect();
 
-        $comments = records_count("comments WHERE id_user=" . $_SESSION["id"]);
+        $comments = show_numComments($_SESSION["id"]);
         
         $threads = show_numThreads("threads", $_SESSION["id"]);
         
@@ -54,8 +54,8 @@
                     </li>
                     <!-- comments -->
                     <li class="nav-item">
-                        <a class="nav-link text-white d-flex justify-content-between" href="./commentsEditor.php">
-                            <p>MIS COMENTARIOS</p>
+                        <a class="nav-link text-white d-flex justify-content-between" href="">
+                            <p>Nº COMENTARIOS DE MIS FOROS</p>
                             <p><?php echo $comments; ?></p>
                         </a>
                     </li>
