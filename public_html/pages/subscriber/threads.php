@@ -35,6 +35,7 @@
             header('Location: ../pages/maintenance.php');
         } finally {
             db_disconnect();
+            header('Location: ' . $_SERVER['PHP_SELF'].'?thread='.$thr);
         }
     }
     
